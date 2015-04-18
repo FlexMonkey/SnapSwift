@@ -13,6 +13,7 @@ class SnapSwift: NSObject
     let snapSwiftContentViewController = SnapSwiftContentViewController()
     let viewController: UIViewController
     var tap: SnapSwiftPanGestureRecognizer!
+    var previousTouchLocation = CGPointZero
     
     init(viewController: UIViewController)
     {
@@ -39,19 +40,30 @@ class SnapSwift: NSObject
         }
     }
     
-    private func tapHandler(recognizer: SnapSwiftPanGestureRecognizer)
+    func tapHandler(recognizer: SnapSwiftPanGestureRecognizer)
     {
         if recognizer.state == UIGestureRecognizerState.Began
         {
-            open(); println("open! \(recognizer.locationInView(viewController.view))")
+            previousTouchLocation = recognizer.locationInView(viewController.view)
+            
+            open()
         }
         else if recognizer.state == UIGestureRecognizerState.Changed
         {
-            println("moved \(recognizer.locationInView(viewController.view))")
+            let touchLocation = recognizer.locationInView(viewController.view)
+            
+            let deltaX = previousTouchLocation.x - touchLocation.x
+            let deltaY = previousTouchLocation.y - touchLocation.y
+            
+            snapSwiftContentViewController.handleMovement(deltaX: deltaX, deltaY: deltaY)
+            
+            previousTouchLocation = touchLocation
         }
         else
         {
             close()
+            
+            previousTouchLocation = CGPointZero
         }
     }
     
@@ -73,24 +85,67 @@ class SnapSwift: NSObject
 
 class SnapSwiftContentViewController: UIViewController
 {
-    let label = UILabel(frame: CGRect(x: 50, y: 50, width: 200, height: 200))
     let background = UIView(frame: CGRectZero)
-    
+
     override func viewDidLoad()
     {
-        background.backgroundColor = UIColor(red: 0, green: 1, blue: 0, alpha: 0.25)
+        background.backgroundColor = UIColor.clearColor()
         view.addSubview(background)
-        
-        label.text = "Hello inside SnapSwift!!!"
-        view.addSubview(label)
     }
 
     override func viewDidLayoutSubviews()
     {
-        background.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        let bgHeight = CGFloat(parameters.count * 30)
+        
+        background.frame = CGRect(
+            x: view.frame.width / 2 - 100,
+            y: view.frame.height / 2  - bgHeight / 2,
+            width: 200,
+            height: bgHeight)
+    }
+    
+    var selectedWidgetIndex = 0
+    
+    func handleMovement(#deltaX: CGFloat, deltaY: CGFloat)
+    {
+        (background.subviews[selectedWidgetIndex] as? SnapSwiftParameterWidget)?.selected = false
+        
+        let backgroundNewY = min(max(background.frame.origin.y - deltaY, view.frame.height / 2 - background.frame.height + 15), view.frame.height / 2 - 15)
+        
+        background.frame.origin.y = backgroundNewY
+        
+        selectedWidgetIndex = Int((view.frame.height / 2 - backgroundNewY)  / 30)
+
+        (background.subviews[selectedWidgetIndex] as? SnapSwiftParameterWidget)?.selected = true
     }
     
     var parameters: [SnapSwiftParameter] = [SnapSwiftParameter]()
+    {
+        didSet
+        {
+            rebuildUI()
+            handleMovement(deltaX: 0, deltaY: 0)
+        }
+    }
+    
+    private func rebuildUI()
+    {
+        for child in background.subviews
+        {
+            (child as? UIView)?.removeFromSuperview()
+        }
+        
+        for (var i: Int, var parameter) in enumerate(parameters)
+        {
+            let widget = SnapSwiftParameterWidget()
+            widget.parameter = parameter
+            
+            widget.frame = CGRect(x: 0, y: i * 30, width: 200, height: 30)
+            
+            background.addSubview(widget)
+        }
+        
+        viewDidLayoutSubviews()
+    }
 }
-
 

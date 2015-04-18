@@ -15,9 +15,13 @@ class ViewController: UIViewController
     var snapSwift: SnapSwift!
     
     var snapSwiftParameters: [SnapSwiftParameter] =
-                                [SnapSwiftParameter(label: "Red", normalisedValue: 0.5),
-                                SnapSwiftParameter(label: "Green", normalisedValue: 0.9),
-                                SnapSwiftParameter(label: "Blue", normalisedValue: 0.25)]
+                    [SnapSwiftParameter(label: "Red", normalisedValue: 0.5),
+                        SnapSwiftParameter(label: "Green", normalisedValue: 0.9),
+                        SnapSwiftParameter(label: "Blue", normalisedValue: 0.25),
+                        SnapSwiftParameter(label: "Cyan", normalisedValue: 0.5),
+                        SnapSwiftParameter(label: "Magenta", normalisedValue: 0.9),
+                        SnapSwiftParameter(label: "Yellow", normalisedValue: 0.25),
+                        SnapSwiftParameter(label: "Black", normalisedValue: 0.25)]
     
     override func viewDidLoad()
     {
@@ -25,12 +29,12 @@ class ViewController: UIViewController
         
         label.text = "Hello from SnapSwift!!!"
         view.addSubview(label)
-
+        
         view.backgroundColor = UIColor.lightGrayColor()
         
         snapSwift = SnapSwift(viewController: self)
         snapSwift.parameters = snapSwiftParameters
     }
-
+    
 }
 
