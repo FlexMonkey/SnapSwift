@@ -8,74 +8,89 @@
 
 import UIKit
 
-class SnapSwift
+class SnapSwift: NSObject
 {
-    init()
+    let snapSwiftContentViewController = SnapSwiftContentViewController()
+    let viewController: UIViewController
+    var tap: SnapSwiftPanGestureRecognizer!
+    
+    init(viewController: UIViewController)
     {
-        println("hello from SnapSwift!")
+        self.viewController = viewController
+
+        super.init()
+        
+        tap = SnapSwiftPanGestureRecognizer(target: self, action: "tapHandler:")
+        viewController.view.addGestureRecognizer(tap)
+        
+        snapSwiftContentViewController.view.backgroundColor = UIColor.clearColor()
+    }
+
+    deinit
+    {
+        viewController.view.removeGestureRecognizer(tap)
     }
     
-    func open(viewController: UIViewController)
+    var parameters: [SnapSwiftParameter] = [SnapSwiftParameter]()
     {
-        let snapSwiftViewController = SnapSwiftContentViewController()
+        didSet
+        {
+           snapSwiftContentViewController.parameters = parameters
+        }
+    }
+    
+    private func tapHandler(recognizer: SnapSwiftPanGestureRecognizer)
+    {
+        if recognizer.state == UIGestureRecognizerState.Began
+        {
+            open(); println("open! \(recognizer.locationInView(viewController.view))")
+        }
+        else if recognizer.state == UIGestureRecognizerState.Changed
+        {
+            println("moved \(recognizer.locationInView(viewController.view))")
+        }
+        else
+        {
+            close()
+        }
+    }
+    
+    private func open()
+    {
+        snapSwiftContentViewController.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext
+        snapSwiftContentViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         
-        snapSwiftViewController.modalPresentationStyle = UIModalPresentationStyle.Popover
-        
-        snapSwiftViewController.preferredContentSize = CGSize(width: viewController.view.frame.width, height: viewController.view.frame.height)
-        
-        let popoverController = UIPopoverController(contentViewController: snapSwiftViewController)
-        let popoverRect = viewController.view.frame.rectByInsetting(dx: 0, dy: 0)
-        
-        popoverController.presentPopoverFromRect(popoverRect, inView: viewController.view, permittedArrowDirections: UIPopoverArrowDirection.allZeros, animated: true)
-        
-        viewController.resignFirstResponder()
-        viewController.view.userInteractionEnabled = false
-        snapSwiftViewController.view.exclusiveTouch = true
-        
-        snapSwiftViewController
-        
-        viewController.reloadInputViews()
+        viewController.presentViewController(snapSwiftContentViewController, animated: true, completion: nil)
+    }
+    
+    private func close()
+    {
+        viewController.dismissViewControllerAnimated(true, completion: nil)
     }
     
 }
 
-class SnapSwiftViewController: UIViewController
-{
-    let snapSwift = SnapSwift()
-
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
-    {
-        super.touchesBegan(touches, withEvent: event)
-        
-        view.userInteractionEnabled = false
-        
-        snapSwift.open(self)
-    }
-}
 
 class SnapSwiftContentViewController: UIViewController
 {
+    let label = UILabel(frame: CGRect(x: 50, y: 50, width: 200, height: 200))
+    let background = UIView(frame: CGRectZero)
+    
     override func viewDidLoad()
     {
-        view.backgroundColor = UIColor.darkGrayColor()
-        view.exclusiveTouch = true
-    }
-    
-    override func becomeFirstResponder() -> Bool
-    {
-        return true
-    }
-    
-    override func isFirstResponder() -> Bool
-    {
-        return true
-    }
-    
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent)
-    {
-        super.touchesMoved(touches, withEvent: event)
+        background.backgroundColor = UIColor(red: 0, green: 1, blue: 0, alpha: 0.25)
+        view.addSubview(background)
         
-        println("touches moved from SnapSwiftViewController!")
+        label.text = "Hello inside SnapSwift!!!"
+        view.addSubview(label)
     }
+
+    override func viewDidLayoutSubviews()
+    {
+        background.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+    }
+    
+    var parameters: [SnapSwiftParameter] = [SnapSwiftParameter]()
 }
+
 

@@ -8,29 +8,29 @@
 
 import UIKit
 
-class ViewController: SnapSwiftViewController
+class ViewController: UIViewController
 {
+    let label = UILabel(frame: CGRect(x: 10, y: 10, width: 200, height: 200))
+    
+    var snapSwift: SnapSwift!
+    
+    var snapSwiftParameters: [SnapSwiftParameter] =
+                                [SnapSwiftParameter(label: "Red", normalisedValue: 0.5),
+                                SnapSwiftParameter(label: "Green", normalisedValue: 0.9),
+                                SnapSwiftParameter(label: "Blue", normalisedValue: 0.25)]
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        label.text = "Hello from SnapSwift!!!"
+        view.addSubview(label)
 
         view.backgroundColor = UIColor.lightGrayColor()
-    }
-
-
-
-    override func resignFirstResponder() -> Bool
-    {
-        return true
-    }
-    
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent)
-    {
-        // super.touchesMoved(touches, withEvent: event)
         
-        println("touches moved from root view controller \(view.userInteractionEnabled)")
+        snapSwift = SnapSwift(viewController: self)
+        snapSwift.parameters = snapSwiftParameters
     }
-    
 
 }
 

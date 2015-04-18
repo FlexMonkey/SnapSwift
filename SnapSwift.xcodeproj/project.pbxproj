@@ -14,6 +14,7 @@
 		3ED4D8101AE0DAF3008FA4D9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ED4D80E1AE0DAF3008FA4D9 /* LaunchScreen.xib */; };
 		3ED4D81C1AE0DAF3008FA4D9 /* SnapSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D81B1AE0DAF3008FA4D9 /* SnapSwiftTests.swift */; };
 		3ED4D8281AE0DB4E008FA4D9 /* SnapSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */; };
+		BEB126131AE2384900F368E7 /* SnapSwiftSupportingClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,8 @@
 		3ED4D81A1AE0DAF3008FA4D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3ED4D81B1AE0DAF3008FA4D9 /* SnapSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapSwiftTests.swift; sourceTree = "<group>"; };
 		3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwift.swift; sourceTree = "<group>"; };
+		BE06D19D1AE22ADD00316B53 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
+		BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwiftSupportingClasses.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,7 @@
 				3ED4D80C1AE0DAF3008FA4D9 /* Images.xcassets */,
 				3ED4D80E1AE0DAF3008FA4D9 /* LaunchScreen.xib */,
 				3ED4D8031AE0DAF3008FA4D9 /* Supporting Files */,
+				BE06D19D1AE22ADD00316B53 /* Header.h */,
 			);
 			path = SnapSwift;
 			sourceTree = "<group>";
@@ -119,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */,
+				BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */,
 			);
 			name = snapSwift;
 			sourceTree = "<group>";
@@ -225,6 +230,7 @@
 			files = (
 				3ED4D8081AE0DAF3008FA4D9 /* ViewController.swift in Sources */,
 				3ED4D8281AE0DB4E008FA4D9 /* SnapSwift.swift in Sources */,
+				BEB126131AE2384900F368E7 /* SnapSwiftSupportingClasses.swift in Sources */,
 				3ED4D8061AE0DAF3008FA4D9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +313,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = ./SnapSwift/Header.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -345,6 +352,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = ./SnapSwift/Header.h;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -423,6 +431,7 @@
 				3ED4D8211AE0DAF3008FA4D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3ED4D8221AE0DAF3008FA4D9 /* Build configuration list for PBXNativeTarget "SnapSwiftTests" */ = {
 			isa = XCConfigurationList;
@@ -431,6 +440,7 @@
 				3ED4D8241AE0DAF3008FA4D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
