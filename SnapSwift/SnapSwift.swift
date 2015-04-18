@@ -8,6 +8,8 @@
 
 import UIKit
 
+let snapSwiftRowHeight = 50
+
 class SnapSwift: NSObject
 {
     let snapSwiftContentViewController = SnapSwiftContentViewController()
@@ -78,6 +80,7 @@ class SnapSwift: NSObject
     private func close()
     {
         viewController.dismissViewControllerAnimated(true, completion: nil)
+        
     }
     
 }
@@ -85,6 +88,7 @@ class SnapSwift: NSObject
 
 class SnapSwiftContentViewController: UIViewController
 {
+    var selectedWidgetIndex = 0
     let background = UIView(frame: CGRectZero)
 
     override func viewDidLoad()
@@ -95,7 +99,7 @@ class SnapSwiftContentViewController: UIViewController
 
     override func viewDidLayoutSubviews()
     {
-        let bgHeight = CGFloat(parameters.count * 30)
+        let bgHeight = CGFloat(parameters.count * snapSwiftRowHeight)
         
         background.frame = CGRect(
             x: view.frame.width / 2 - 100,
@@ -104,27 +108,50 @@ class SnapSwiftContentViewController: UIViewController
             height: bgHeight)
     }
     
-    var selectedWidgetIndex = 0
-    
     func handleMovement(#deltaX: CGFloat, deltaY: CGFloat)
     {
+        // vertical movement...
+        
         (background.subviews[selectedWidgetIndex] as? SnapSwiftParameterWidget)?.selected = false
         
-        let backgroundNewY = min(max(background.frame.origin.y - deltaY, view.frame.height / 2 - background.frame.height + 15), view.frame.height / 2 - 15)
+        let backgroundNewY = min(max(background.frame.origin.y - deltaY, view.frame.height / 2 - background.frame.height + CGFloat(snapSwiftRowHeight / 2)), view.frame.height / 2 - CGFloat(snapSwiftRowHeight / 2))
         
         background.frame.origin.y = backgroundNewY
         
-        selectedWidgetIndex = Int((view.frame.height / 2 - backgroundNewY)  / 30)
+        selectedWidgetIndex = Int((view.frame.height / 2 - backgroundNewY)) / snapSwiftRowHeight
 
         (background.subviews[selectedWidgetIndex] as? SnapSwiftParameterWidget)?.selected = true
+        
+        // horizontal movement...
+
+        if abs(deltaX) > 0 && abs(deltaY) < 1
+        {
+            let newValue = min(max(0, parameters[selectedWidgetIndex].normalisedValue - Float(deltaX / 500)), 1)
+            
+            parameters[selectedWidgetIndex].normalisedValue = newValue
+        }
     }
     
     var parameters: [SnapSwiftParameter] = [SnapSwiftParameter]()
     {
         didSet
         {
-            rebuildUI()
-            handleMovement(deltaX: 0, deltaY: 0)
+            let oldParamNames = ":".join(oldValue.map{ $0.label })
+            let paramNames = ":".join(parameters.map{ $0.label })
+            
+            if oldParamNames != paramNames
+            {
+                rebuildUI()
+            
+                handleMovement(deltaX: 0, deltaY: 0)
+            }
+            else
+            {
+                for (var i: Int, var widget) in enumerate(background.subviews)
+                {
+                    (widget as? SnapSwiftParameterWidget)?.parameter = parameters[i]
+                }
+            }
         }
     }
     
@@ -140,7 +167,7 @@ class SnapSwiftContentViewController: UIViewController
             let widget = SnapSwiftParameterWidget()
             widget.parameter = parameter
             
-            widget.frame = CGRect(x: 0, y: i * 30, width: 200, height: 30)
+            widget.frame = CGRect(x: 0, y: i * snapSwiftRowHeight, width: 200, height: snapSwiftRowHeight)
             
             background.addSubview(widget)
         }

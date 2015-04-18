@@ -17,19 +17,24 @@ struct SnapSwiftParameter
 class SnapSwiftParameterWidget: UIView
 {
     let backgroundLayer = CALayer()
-    let label = UILabel()
+    let titleLabel = UILabel()
+    let valueLabel = UILabel()
     
     override func didMoveToSuperview()
     {
-       backgroundLayer.borderColor = UIColor.blueColor().CGColor
+        backgroundLayer.borderColor = UIColor.blueColor().CGColor
         backgroundLayer.borderWidth = 1
         backgroundLayer.cornerRadius = 4
-
+        
         layer.addSublayer(backgroundLayer)
         
-        label.textAlignment = NSTextAlignment.Center
+        titleLabel.textAlignment = NSTextAlignment.Left
+        titleLabel.adjustsFontSizeToFitWidth = true
+        addSubview(titleLabel)
         
-        addSubview(label)
+        valueLabel.textAlignment = NSTextAlignment.Right
+        valueLabel.adjustsFontSizeToFitWidth = true
+        addSubview(valueLabel)
         
         selected = false
     }
@@ -38,7 +43,9 @@ class SnapSwiftParameterWidget: UIView
     {
         didSet
         {
-            label.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
+            titleLabel.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
+            valueLabel.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
+            
             backgroundLayer.backgroundColor = selected ? UIColor.blueColor().CGColor : UIColor.whiteColor().CGColor
         }
     }
@@ -47,15 +54,30 @@ class SnapSwiftParameterWidget: UIView
     {
         didSet
         {
-            label.text = parameter?.label
+            if let parameter = parameter
+            {
+                titleLabel.text = parameter.label
+                valueLabel.text = SnapSwiftParameterWidget.defaultLabelFunction(parameter.normalisedValue)
+            }
+            else
+            {
+                titleLabel.text = "-"
+                valueLabel.text = "-"
+            }
         }
     }
     
     override func layoutSubviews()
     {
-        label.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        titleLabel.frame = CGRect(x: 0, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 2, dy: 0)
+        valueLabel.frame = CGRect(x: frame.width / 2, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 2, dy: 0)
         
         backgroundLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height).rectByInsetting(dx: 0, dy: 0.5)
+    }
+    
+    class func defaultLabelFunction(value : Float) -> String
+    {
+        return NSString(format: "%.2f", value) as String
     }
 }
 
