@@ -16,6 +16,8 @@ struct SnapSwiftParameter
 /// A bordered box with label and float value display
 class SnapSwiftParameterWidget: UIView
 {
+    let unselectedBackgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
+    
     let backgroundLayer = CALayer()
     let titleLabel = UILabel()
     let valueLabel = UILabel()
@@ -46,7 +48,7 @@ class SnapSwiftParameterWidget: UIView
             titleLabel.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
             valueLabel.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
             
-            backgroundLayer.backgroundColor = selected ? UIColor.blueColor().CGColor : UIColor.whiteColor().CGColor
+            backgroundLayer.backgroundColor = selected ? UIColor.blueColor().CGColor : unselectedBackgroundColor.CGColor
         }
     }
     
