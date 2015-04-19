@@ -10,10 +10,10 @@ import UIKit
 
 class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
 {
-    let label = UILabel(frame: CGRect(x: 10, y: 10, width: 200, height: 200))
-    
     var snapSwift: SnapSwift!
     var snapSwiftParameters: [SnapSwiftParameter]!
+    let photograph = UIImage(named: "assets/DSCF0261.jpg")
+    let imageView = UIImageView(frame: CGRectZero)
     
     override func viewDidLoad()
     {
@@ -21,22 +21,23 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
         let rgbLabel: Float -> String = {(NSString(format: "%02X", Int($0 * 255)) as String)}
         
         snapSwiftParameters =
-            [SnapSwiftParameter(label: "Red", normalisedValue: 0.5, labelFunction: rgbLabel),
-            SnapSwiftParameter(label: "Green", normalisedValue: 0.9, labelFunction: rgbLabel),
-            SnapSwiftParameter(label: "Blue", normalisedValue: 0.25, labelFunction: rgbLabel),
-            SnapSwiftParameter(label: "Cyan", normalisedValue: 0, labelFunction: cmykLabel),
-            SnapSwiftParameter(label: "Magenta", normalisedValue: 0, labelFunction: cmykLabel),
-            SnapSwiftParameter(label: "Yellow", normalisedValue: 0, labelFunction: cmykLabel),
-            SnapSwiftParameter(label: "Black", normalisedValue: 0, labelFunction: cmykLabel)]
+            [SnapSwiftParameter(label: "Red", normalisedValue: 0, labelFunction: rgbLabel),
+                SnapSwiftParameter(label: "Green", normalisedValue: 0, labelFunction: rgbLabel),
+                SnapSwiftParameter(label: "Blue", normalisedValue: 1, labelFunction: rgbLabel),
+                SnapSwiftParameter(label: "Cyan", normalisedValue: 0, labelFunction: cmykLabel),
+                SnapSwiftParameter(label: "Magenta", normalisedValue: 0, labelFunction: cmykLabel),
+                SnapSwiftParameter(label: "Yellow", normalisedValue: 0, labelFunction: cmykLabel),
+                SnapSwiftParameter(label: "Black", normalisedValue: 0, labelFunction: cmykLabel),
+                SnapSwiftParameter(label: "Monochrome Intensity", normalisedValue: 0.5)]
         
         super.viewDidLoad()
         
-        label.text = "Hello from SnapSwift!!!"
-        view.addSubview(label)
+        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        view.addSubview(imageView)
         
         view.backgroundColor = UIColor.lightGrayColor()
         
-        snapSwift = SnapSwift(viewController: self)
+        snapSwift = SnapSwift(viewController: self, view: imageView)
         snapSwift.parameters = snapSwiftParameters
         snapSwift.parameterChangedDelegate = self
         
@@ -83,8 +84,37 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[2].normalisedValue = Float(blue)
         }
         
+        // Apply filter
+        let monochromeFilter = CIFilter(name: "CIColorMonochrome")
+        let monochromeColor = CIColor(red: CGFloat(snapSwiftParameters[0].normalisedValue),
+            green: CGFloat(snapSwiftParameters[1].normalisedValue),
+            blue: CGFloat(snapSwiftParameters[2].normalisedValue),
+            alpha: 1)
+        let monochromeInensity = CGFloat(snapSwiftParameters[7].normalisedValue)
         
+        monochromeFilter.setValue(CIImage(image: photograph), forKey: kCIInputImageKey)
+        monochromeFilter.setValue(monochromeColor, forKey: "inputColor")
+        monochromeFilter.setValue(monochromeInensity, forKey: "inputIntensity")
+        
+        var filteredImageData = monochromeFilter.valueForKey(kCIOutputImageKey) as! CIImage!
+        var filteredImageRef: CGImage!
+        
+        let ciContext = CIContext(options: nil)
+        
+        filteredImageRef = ciContext.createCGImage(filteredImageData, fromRect: filteredImageData.extent())
+        
+        let filteredImage = UIImage(CGImage: filteredImageRef)
+        
+        imageView.image = filteredImage
+        
+        // Reset parameters on SnapSwift
         snapSwift.parameters = snapSwiftParameters
+    }
+ 
+    
+    override func viewDidLayoutSubviews()
+    {
+        imageView.frame = CGRect(x: view.frame.origin.x, y: view.frame.origin.y, width: view.frame.width, height: view.frame.height).rectByInsetting(dx: 50, dy: 50)
     }
     
 }

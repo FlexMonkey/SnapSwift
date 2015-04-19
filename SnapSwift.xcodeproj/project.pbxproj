@@ -15,6 +15,7 @@
 		3ED4D81C1AE0DAF3008FA4D9 /* SnapSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D81B1AE0DAF3008FA4D9 /* SnapSwiftTests.swift */; };
 		3ED4D8281AE0DB4E008FA4D9 /* SnapSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */; };
 		BE80EB681AE370B20028C414 /* SnapSwiftContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE80EB671AE370B20028C414 /* SnapSwiftContentViewController.swift */; };
+		BE80EB6A1AE38C330028C414 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = BE80EB691AE38C330028C414 /* assets */; };
 		BEB126131AE2384900F368E7 /* SnapSwiftSupportingClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwift.swift; sourceTree = "<group>"; };
 		BE06D19D1AE22ADD00316B53 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		BE80EB671AE370B20028C414 /* SnapSwiftContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwiftContentViewController.swift; sourceTree = "<group>"; };
+		BE80EB691AE38C330028C414 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwiftSupportingClasses.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,6 +86,7 @@
 		3ED4D8021AE0DAF3008FA4D9 /* SnapSwift */ = {
 			isa = PBXGroup;
 			children = (
+				BE80EB691AE38C330028C414 /* assets */,
 				3ED4D8251AE0DAFC008FA4D9 /* snapSwift */,
 				3ED4D8051AE0DAF3008FA4D9 /* AppDelegate.swift */,
 				3ED4D8071AE0DAF3008FA4D9 /* ViewController.swift */,
@@ -212,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3ED4D80B1AE0DAF3008FA4D9 /* Main.storyboard in Resources */,
+				BE80EB6A1AE38C330028C414 /* assets in Resources */,
 				3ED4D8101AE0DAF3008FA4D9 /* LaunchScreen.xib in Resources */,
 				3ED4D80D1AE0DAF3008FA4D9 /* Images.xcassets in Resources */,
 			);

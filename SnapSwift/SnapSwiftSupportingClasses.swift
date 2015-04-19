@@ -48,6 +48,7 @@ class SnapSwiftParameterWidget: UIView
         
         titleLabel.textAlignment = NSTextAlignment.Left
         titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.numberOfLines = 0
         addSubview(titleLabel)
         
         valueLabel.textAlignment = NSTextAlignment.Right
@@ -92,10 +93,10 @@ class SnapSwiftParameterWidget: UIView
     
     override func layoutSubviews()
     {
-        titleLabel.frame = CGRect(x: 0, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 4, dy: 0)
+        titleLabel.frame = CGRect(x: 0, y: 0, width: frame.width / 2 + 10, height: frame.height).rectByInsetting(dx: 4, dy: 0)
         valueLabel.frame = CGRect(x: frame.width / 2, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 4, dy: 0)
         
-        progressView.frame = CGRect(x: 0, y: frame.height - 6, width: frame.width, height: 0).rectByInsetting(dx: 5, dy: 0)
+        progressView.frame = CGRect(x: 0, y: frame.height - 4, width: frame.width, height: 0).rectByInsetting(dx: 5, dy: 0)
         
         backgroundLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height).rectByInsetting(dx: 0, dy: 0.5)
     }

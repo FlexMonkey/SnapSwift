@@ -15,6 +15,7 @@ class SnapSwift: NSObject
 {
     let snapSwiftContentViewController = SnapSwiftContentViewController()
     let viewController: UIViewController
+    let view: UIView
     var tap: SnapSwiftPanGestureRecognizer!
     var previousTouchLocation = CGPointZero
     
@@ -26,14 +27,16 @@ class SnapSwift: NSObject
         }
     }
     
-    init(viewController: UIViewController)
+    init(viewController: UIViewController, view: UIView)
     {
         self.viewController = viewController
+        self.view = view
+        self.view.userInteractionEnabled = true
 
-        super.init()
+        super.init();
         
         tap = SnapSwiftPanGestureRecognizer(target: self, action: "tapHandler:")
-        viewController.view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(tap)
         
         snapSwiftContentViewController.view.backgroundColor = UIColor.clearColor()
     }
@@ -55,13 +58,13 @@ class SnapSwift: NSObject
     {
         if recognizer.state == UIGestureRecognizerState.Began
         {
-            previousTouchLocation = recognizer.locationInView(viewController.view)
+            previousTouchLocation = recognizer.locationInView(view)
             
             open()
         }
         else if recognizer.state == UIGestureRecognizerState.Changed
         {
-            let touchLocation = recognizer.locationInView(viewController.view)
+            let touchLocation = recognizer.locationInView(view)
             
             let deltaX = previousTouchLocation.x - touchLocation.x
             let deltaY = previousTouchLocation.y - touchLocation.y
