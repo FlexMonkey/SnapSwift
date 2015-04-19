@@ -14,6 +14,7 @@
 		3ED4D8101AE0DAF3008FA4D9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ED4D80E1AE0DAF3008FA4D9 /* LaunchScreen.xib */; };
 		3ED4D81C1AE0DAF3008FA4D9 /* SnapSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D81B1AE0DAF3008FA4D9 /* SnapSwiftTests.swift */; };
 		3ED4D8281AE0DB4E008FA4D9 /* SnapSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */; };
+		BE80EB681AE370B20028C414 /* SnapSwiftContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE80EB671AE370B20028C414 /* SnapSwiftContentViewController.swift */; };
 		BEB126131AE2384900F368E7 /* SnapSwiftSupportingClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		3ED4D81B1AE0DAF3008FA4D9 /* SnapSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapSwiftTests.swift; sourceTree = "<group>"; };
 		3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwift.swift; sourceTree = "<group>"; };
 		BE06D19D1AE22ADD00316B53 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
+		BE80EB671AE370B20028C414 /* SnapSwiftContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwiftContentViewController.swift; sourceTree = "<group>"; };
 		BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwiftSupportingClasses.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +126,7 @@
 			children = (
 				3ED4D8271AE0DB4E008FA4D9 /* SnapSwift.swift */,
 				BEB126121AE2384900F368E7 /* SnapSwiftSupportingClasses.swift */,
+				BE80EB671AE370B20028C414 /* SnapSwiftContentViewController.swift */,
 			);
 			name = snapSwift;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				3ED4D8281AE0DB4E008FA4D9 /* SnapSwift.swift in Sources */,
 				BEB126131AE2384900F368E7 /* SnapSwiftSupportingClasses.swift in Sources */,
 				3ED4D8061AE0DAF3008FA4D9 /* AppDelegate.swift in Sources */,
+				BE80EB681AE370B20028C414 /* SnapSwiftContentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

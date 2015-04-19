@@ -13,6 +13,12 @@ struct SnapSwiftParameter
     var normalisedValue: Float
 }
 
+/// Protocol for responding to parameter changes 
+protocol SnapSwiftParameterChangedDelegate: NSObjectProtocol
+{
+    func snapSwiftParameterDidChange(#parameterIndex:Int, parameters: [SnapSwiftParameter])
+}
+
 /// A bordered box with label and float value display
 class SnapSwiftParameterWidget: UIView
 {
@@ -82,6 +88,8 @@ class SnapSwiftParameterWidget: UIView
         return NSString(format: "%.2f", value) as String
     }
 }
+
+
 
 /// An extended UIPanGestureRecognizer that fires UIGestureRecognizerState.Began
 /// with the first touch down, i.e. without requiring any movement.
