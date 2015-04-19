@@ -14,6 +14,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     var snapSwiftParameters: [SnapSwiftParameter]!
     let photograph = UIImage(named: "assets/DSCF0261.jpg")
     let imageView = UIImageView(frame: CGRectZero)
+    let ciContext = CIContext(options: nil)
     
     override func viewDidLoad()
     {
@@ -84,7 +85,13 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[2].normalisedValue = Float(blue)
         }
         
-        // Apply filter
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {self.applyImageFilter()})
+        
+        snapSwift.parameters = snapSwiftParameters
+    }
+   
+    func applyImageFilter()
+    {
         let monochromeFilter = CIFilter(name: "CIColorMonochrome")
         let monochromeColor = CIColor(red: CGFloat(snapSwiftParameters[0].normalisedValue),
             green: CGFloat(snapSwiftParameters[1].normalisedValue),
@@ -96,22 +103,15 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
         monochromeFilter.setValue(monochromeColor, forKey: "inputColor")
         monochromeFilter.setValue(monochromeInensity, forKey: "inputIntensity")
         
-        var filteredImageData = monochromeFilter.valueForKey(kCIOutputImageKey) as! CIImage!
-        var filteredImageRef: CGImage!
+        let filteredImageData = monochromeFilter.valueForKey(kCIOutputImageKey) as! CIImage!
         
-        let ciContext = CIContext(options: nil)
-        
-        filteredImageRef = ciContext.createCGImage(filteredImageData, fromRect: filteredImageData.extent())
+        let filteredImageRef = ciContext.createCGImage(filteredImageData, fromRect: filteredImageData.extent())
         
         let filteredImage = UIImage(CGImage: filteredImageRef)
         
-        imageView.image = filteredImage
-        
-        // Reset parameters on SnapSwift
-        snapSwift.parameters = snapSwiftParameters
+        dispatch_async(dispatch_get_main_queue(), {self.imageView.image = filteredImage})
     }
- 
-    
+
     override func viewDidLayoutSubviews()
     {
         imageView.frame = CGRect(x: view.frame.origin.x, y: view.frame.origin.y, width: view.frame.width, height: view.frame.height).rectByInsetting(dx: 50, dy: 50)
