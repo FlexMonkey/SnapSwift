@@ -11,6 +11,14 @@ struct SnapSwiftParameter
 {
     var label: String
     var normalisedValue: Float
+    var labelFunction: Float -> String // = defaultLabelFunction
+    
+    init(label: String, normalisedValue: Float, labelFunction: Float -> String = { NSString(format: "%.2f", $0) as String })
+    {
+        self.label = label
+        self.normalisedValue = normalisedValue
+        self.labelFunction = labelFunction
+    }
 }
 
 /// Protocol for responding to parameter changes 
@@ -65,7 +73,7 @@ class SnapSwiftParameterWidget: UIView
             if let parameter = parameter
             {
                 titleLabel.text = parameter.label
-                valueLabel.text = SnapSwiftParameterWidget.defaultLabelFunction(parameter.normalisedValue)
+                valueLabel.text = parameter.labelFunction(parameter.normalisedValue)
             }
             else
             {
@@ -83,10 +91,7 @@ class SnapSwiftParameterWidget: UIView
         backgroundLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height).rectByInsetting(dx: 0, dy: 0.5)
     }
     
-    class func defaultLabelFunction(value : Float) -> String
-    {
-        return NSString(format: "%.2f", value) as String
-    }
+
 }
 
 

@@ -13,18 +13,22 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     let label = UILabel(frame: CGRect(x: 10, y: 10, width: 200, height: 200))
     
     var snapSwift: SnapSwift!
-    
-    var snapSwiftParameters: [SnapSwiftParameter] =
-                    [SnapSwiftParameter(label: "Red", normalisedValue: 0.5),
-                        SnapSwiftParameter(label: "Green", normalisedValue: 0.9),
-                        SnapSwiftParameter(label: "Blue", normalisedValue: 0.25),
-                        SnapSwiftParameter(label: "Cyan", normalisedValue: 0.5),
-                        SnapSwiftParameter(label: "Magenta", normalisedValue: 0.9),
-                        SnapSwiftParameter(label: "Yellow", normalisedValue: 0.25),
-                        SnapSwiftParameter(label: "Black", normalisedValue: 0.25)]
+    var snapSwiftParameters: [SnapSwiftParameter]!
     
     override func viewDidLoad()
     {
+        let cmykLabel: Float -> String = {(NSString(format: "%d", Int($0 * 100)) as String) + "%"}
+        let rgbLabel: Float -> String = {(NSString(format: "%20X", Int($0 * 255)) as String)}
+        
+        snapSwiftParameters =
+            [SnapSwiftParameter(label: "Red", normalisedValue: 0.5, labelFunction: rgbLabel),
+            SnapSwiftParameter(label: "Green", normalisedValue: 0.9, labelFunction: rgbLabel),
+            SnapSwiftParameter(label: "Blue", normalisedValue: 0.25, labelFunction: rgbLabel),
+            SnapSwiftParameter(label: "Cyan", normalisedValue: 0.5, labelFunction: cmykLabel),
+            SnapSwiftParameter(label: "Magenta", normalisedValue: 0.9, labelFunction: cmykLabel),
+            SnapSwiftParameter(label: "Yellow", normalisedValue: 0.25, labelFunction: cmykLabel),
+            SnapSwiftParameter(label: "Black", normalisedValue: 0.25, labelFunction: cmykLabel)]
+        
         super.viewDidLoad()
         
         label.text = "Hello from SnapSwift!!!"
@@ -59,7 +63,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[5].normalisedValue = Float(yellow)
             snapSwiftParameters[6].normalisedValue = Float(black)
         }
-        else if parameterIndex >= 3 && parameterIndex <= 6
+        else if parameterIndex >= 3 && parameterIndex <= 6 // adjusting cmyk...  
         {
             let cyan = CGFloat(snapSwiftParameters[3].normalisedValue)
             let magenta = CGFloat(snapSwiftParameters[4].normalisedValue)
