@@ -42,7 +42,7 @@ class SnapSwiftContentViewController: UIViewController
             x: view.frame.width / 2 - CGFloat(snapSwiftColumnWidth / 2),
             y: view.frame.height / 2  - CGFloat(snapSwiftRowHeight / 2),
             width: CGFloat(snapSwiftColumnWidth),
-            height: CGFloat(snapSwiftRowHeight)).rectByInsetting(dx: -5, dy: -5)
+            height: CGFloat(snapSwiftRowHeight)).rectByInsetting(dx: -5, dy: -1)
     }
     
     func handleMovement(#deltaX: CGFloat, deltaY: CGFloat)
@@ -63,7 +63,8 @@ class SnapSwiftContentViewController: UIViewController
         {
             let snappedBackgroundOriginY = view.frame.height / 2  - CGFloat(Float(snapSwiftRowHeight) * 0.5) - CGFloat(selectedWidgetIndex * snapSwiftRowHeight)
             
-            UIView.animateWithDuration(0.2, animations: { self.background.frame.origin.y = snappedBackgroundOriginY })
+            UIView.setAnimationBeginsFromCurrentState(true)
+            UIView.animateWithDuration(0.3, animations: { self.background.frame.origin.y = snappedBackgroundOriginY })
             
             let newValue = min(max(0, parameters[selectedWidgetIndex].normalisedValue - Float(deltaX / 500)), 1)
             

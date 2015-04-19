@@ -11,7 +11,7 @@ struct SnapSwiftParameter
 {
     var label: String
     var normalisedValue: Float
-    var labelFunction: Float -> String // = defaultLabelFunction
+    var labelFunction: Float -> String
     
     init(label: String, normalisedValue: Float, labelFunction: Float -> String = { NSString(format: "%.2f", $0) as String })
     {
@@ -36,6 +36,8 @@ class SnapSwiftParameterWidget: UIView
     let titleLabel = UILabel()
     let valueLabel = UILabel()
     
+    let progressView = UIProgressView(progressViewStyle: UIProgressViewStyle.Default)
+    
     override func didMoveToSuperview()
     {
         backgroundLayer.borderColor = UIColor.blueColor().CGColor
@@ -52,6 +54,8 @@ class SnapSwiftParameterWidget: UIView
         valueLabel.adjustsFontSizeToFitWidth = true
         addSubview(valueLabel)
         
+        addSubview(progressView)
+        
         selected = false
     }
     
@@ -61,6 +65,7 @@ class SnapSwiftParameterWidget: UIView
         {
             titleLabel.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
             valueLabel.textColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
+            progressView.tintColor = selected ? UIColor.whiteColor() : UIColor.blueColor()
             
             backgroundLayer.backgroundColor = selected ? UIColor.blueColor().CGColor : unselectedBackgroundColor.CGColor
         }
@@ -74,19 +79,23 @@ class SnapSwiftParameterWidget: UIView
             {
                 titleLabel.text = parameter.label
                 valueLabel.text = parameter.labelFunction(parameter.normalisedValue)
+                progressView.progress = parameter.normalisedValue
             }
             else
             {
                 titleLabel.text = "-"
                 valueLabel.text = "-"
+                progressView.progress = 0
             }
         }
     }
     
     override func layoutSubviews()
     {
-        titleLabel.frame = CGRect(x: 0, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 2, dy: 0)
-        valueLabel.frame = CGRect(x: frame.width / 2, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 2, dy: 0)
+        titleLabel.frame = CGRect(x: 0, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 4, dy: 0)
+        valueLabel.frame = CGRect(x: frame.width / 2, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 4, dy: 0)
+        
+        progressView.frame = CGRect(x: 0, y: frame.height - 6, width: frame.width, height: 0).rectByInsetting(dx: 5, dy: 0)
         
         backgroundLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height).rectByInsetting(dx: 0, dy: 0.5)
     }

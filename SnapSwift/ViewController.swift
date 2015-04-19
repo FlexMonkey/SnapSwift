@@ -18,16 +18,16 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     override func viewDidLoad()
     {
         let cmykLabel: Float -> String = {(NSString(format: "%d", Int($0 * 100)) as String) + "%"}
-        let rgbLabel: Float -> String = {(NSString(format: "%20X", Int($0 * 255)) as String)}
+        let rgbLabel: Float -> String = {(NSString(format: "%02X", Int($0 * 255)) as String)}
         
         snapSwiftParameters =
             [SnapSwiftParameter(label: "Red", normalisedValue: 0.5, labelFunction: rgbLabel),
             SnapSwiftParameter(label: "Green", normalisedValue: 0.9, labelFunction: rgbLabel),
             SnapSwiftParameter(label: "Blue", normalisedValue: 0.25, labelFunction: rgbLabel),
-            SnapSwiftParameter(label: "Cyan", normalisedValue: 0.5, labelFunction: cmykLabel),
-            SnapSwiftParameter(label: "Magenta", normalisedValue: 0.9, labelFunction: cmykLabel),
-            SnapSwiftParameter(label: "Yellow", normalisedValue: 0.25, labelFunction: cmykLabel),
-            SnapSwiftParameter(label: "Black", normalisedValue: 0.25, labelFunction: cmykLabel)]
+            SnapSwiftParameter(label: "Cyan", normalisedValue: 0, labelFunction: cmykLabel),
+            SnapSwiftParameter(label: "Magenta", normalisedValue: 0, labelFunction: cmykLabel),
+            SnapSwiftParameter(label: "Yellow", normalisedValue: 0, labelFunction: cmykLabel),
+            SnapSwiftParameter(label: "Black", normalisedValue: 0, labelFunction: cmykLabel)]
         
         super.viewDidLoad()
         
@@ -39,6 +39,8 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
         snapSwift = SnapSwift(viewController: self)
         snapSwift.parameters = snapSwiftParameters
         snapSwift.parameterChangedDelegate = self
+        
+        snapSwiftParameterDidChange(parameterIndex: 0, parameters: snapSwiftParameters)
     }
     
     func snapSwiftParameterDidChange(#parameterIndex:Int, parameters: [SnapSwiftParameter])
