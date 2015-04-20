@@ -25,12 +25,14 @@ struct SnapSwiftParameter
     var label: String
     var normalisedValue: Float
     var labelFunction: Float -> String
+    var stringValues: [String]?
     
-    init(label: String, normalisedValue: Float, labelFunction: Float -> String = { NSString(format: "%.2f", $0) as String })
+    init(label: String, normalisedValue: Float, labelFunction: Float -> String = { NSString(format: "%.2f", $0) as String }, stringValues: [String]? = nil)
     {
         self.label = label
         self.normalisedValue = normalisedValue
         self.labelFunction = labelFunction
+        self.stringValues = stringValues
     }
 }
 
@@ -50,6 +52,9 @@ class SnapSwiftParameterWidget: UIView
     let valueLabel = UILabel()
     
     let progressView = UIProgressView(progressViewStyle: UIProgressViewStyle.Default)
+    
+    let leftStringValuesWing = UILabel()
+    let rightStringValuesWing = UILabel()
     
     override func didMoveToSuperview()
     {
@@ -94,14 +99,53 @@ class SnapSwiftParameterWidget: UIView
                 titleLabel.text = parameter.label
                 valueLabel.text = parameter.labelFunction(parameter.normalisedValue)
                 progressView.progress = parameter.normalisedValue
+                
+                if let stringValues = parameter.stringValues
+                {
+                    if !leftStringValuesWing.isDescendantOfView(self)
+                    {
+                        addSubview(leftStringValuesWing)
+                        addSubview(rightStringValuesWing)
+                    
+                        leftStringValuesWing.textColor  = UIColor.whiteColor()
+                        rightStringValuesWing.textColor = UIColor.whiteColor()
+                        
+                        leftStringValuesWing.textAlignment = NSTextAlignment.Right
+                        rightStringValuesWing.textAlignment = NSTextAlignment.Left
+                        
+                        layoutSubviews()
+                    }
+                    
+                    let selectedIndexInStringValues = Int(parameter.normalisedValue * Float(stringValues.count - 1))
+                    
+                    leftStringValuesWing.text = selectedIndexInStringValues > 0 ?
+                        " | ".join(stringValues[0 ... selectedIndexInStringValues]) : ""
+
+                    rightStringValuesWing.text = selectedIndexInStringValues < stringValues.count - 1 ?
+                        " | ".join(stringValues[selectedIndexInStringValues + 1 ... stringValues.count - 1]) : ""
+                    
+
+                }
+                else
+                {
+                    removeStringValueWings()
+                }
             }
             else
             {
                 titleLabel.text = "-"
                 valueLabel.text = "-"
                 progressView.progress = 0
+                
+                removeStringValueWings()
             }
         }
+    }
+    
+    func removeStringValueWings()
+    {
+        leftStringValuesWing.removeFromSuperview()
+        rightStringValuesWing.removeFromSuperview()
     }
     
     override func layoutSubviews()
@@ -112,6 +156,12 @@ class SnapSwiftParameterWidget: UIView
         progressView.frame = CGRect(x: 0, y: frame.height - 4, width: frame.width, height: 0).rectByInsetting(dx: 5, dy: 0)
         
         backgroundLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height).rectByInsetting(dx: 0, dy: 0.5)
+        
+        if leftStringValuesWing.isDescendantOfView(self)
+        {
+            leftStringValuesWing.frame = CGRect(x: -300, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
+            rightStringValuesWing.frame = CGRect(x: frame.width, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
+        }
     }
     
 

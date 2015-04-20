@@ -31,8 +31,11 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     
     override func viewDidLoad()
     {
+        let presetColors = ["Red", "Green", "Blue", "Cyan", "Yellow", "Magenta", "Black"]
+        
         let cmykLabel: Float -> String = {(NSString(format: "%d", Int($0 * 100)) as String) + "%"}
         let rgbLabel: Float -> String = {(NSString(format: "%02X", Int($0 * 255)) as String)}
+        let presetLabel: Float -> String = { presetColors[Int($0 * Float(presetColors.count - 1))] }
         
         snapSwiftParameters =
             [SnapSwiftParameter(label: "Red", normalisedValue: 0, labelFunction: rgbLabel),
@@ -42,7 +45,8 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
                 SnapSwiftParameter(label: "Magenta", normalisedValue: 0, labelFunction: cmykLabel),
                 SnapSwiftParameter(label: "Yellow", normalisedValue: 0, labelFunction: cmykLabel),
                 SnapSwiftParameter(label: "Black", normalisedValue: 0, labelFunction: cmykLabel),
-                SnapSwiftParameter(label: "Monochrome Intensity", normalisedValue: 0.5)]
+                SnapSwiftParameter(label: "Monochrome Intensity", normalisedValue: 0.5),
+                SnapSwiftParameter(label: "Color Preset", normalisedValue: 0, labelFunction: presetLabel, stringValues: presetColors)]
         
         super.viewDidLoad()
         
