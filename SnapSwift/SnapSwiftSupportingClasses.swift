@@ -43,7 +43,7 @@ protocol SnapSwiftParameterChangedDelegate: NSObjectProtocol
 }
 
 /// A bordered box with label and float value display
-class SnapSwiftParameterWidget: UIView
+class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollectionViewDelegate
 {
     let unselectedBackgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
     
@@ -54,9 +54,31 @@ class SnapSwiftParameterWidget: UIView
     let progressView = UIProgressView(progressViewStyle: UIProgressViewStyle.Default)
     
     let leftStringValuesWing = UILabel()
-    let rightStringValuesWing = UILabel()
+    let rightStringValuesWing: UICollectionView
     
-    override func didMoveToSuperview()
+    init()
+    {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .Horizontal
+        layout.itemSize = CGSize(width: 100, height: snapSwiftRowHeight)
+        
+        rightStringValuesWing = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
+        rightStringValuesWing.backgroundColor = UIColor.clearColor()
+        
+        rightStringValuesWing.registerClass(StringValueCell.self, forCellWithReuseIdentifier: "Cell")
+        
+        super.init(frame: CGRectZero)
+        
+        rightStringValuesWing.dataSource = self
+        rightStringValuesWing.delegate = self
+    }
+    
+    required init(coder aDecoder: NSCoder)
+    {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func didMoveToWindow()
     {
         backgroundLayer.borderColor = UIColor.blueColor().CGColor
         backgroundLayer.borderWidth = 1
@@ -76,6 +98,23 @@ class SnapSwiftParameterWidget: UIView
         addSubview(progressView)
         
         selected = false
+        
+        updateWings()
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+        return rightStringValues.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! StringValueCell
+        
+        cell.titleString = rightStringValues[indexPath.item];
+        
+        return cell
     }
     
     var selected: Bool = false
@@ -90,6 +129,8 @@ class SnapSwiftParameterWidget: UIView
         }
     }
     
+    var rightStringValues = [String]()
+    
     var parameter: SnapSwiftParameter?
     {
         didSet
@@ -100,36 +141,7 @@ class SnapSwiftParameterWidget: UIView
                 valueLabel.text = parameter.labelFunction(parameter.normalisedValue)
                 progressView.progress = parameter.normalisedValue
                 
-                if let stringValues = parameter.stringValues
-                {
-                    if !leftStringValuesWing.isDescendantOfView(self)
-                    {
-                        addSubview(leftStringValuesWing)
-                        addSubview(rightStringValuesWing)
-                    
-                        leftStringValuesWing.textColor  = UIColor.whiteColor()
-                        rightStringValuesWing.textColor = UIColor.whiteColor()
-                        
-                        leftStringValuesWing.textAlignment = NSTextAlignment.Right
-                        rightStringValuesWing.textAlignment = NSTextAlignment.Left
-                        
-                        layoutSubviews()
-                    }
-                    
-                    let selectedIndexInStringValues = Int(parameter.normalisedValue * Float(stringValues.count - 1))
-                    
-                    leftStringValuesWing.text = selectedIndexInStringValues > 0 ?
-                        " | ".join(stringValues[0 ... selectedIndexInStringValues]) : ""
-
-                    rightStringValuesWing.text = selectedIndexInStringValues < stringValues.count - 1 ?
-                        " | ".join(stringValues[selectedIndexInStringValues + 1 ... stringValues.count - 1]) : ""
-                    
-
-                }
-                else
-                {
-                    removeStringValueWings()
-                }
+                updateWings()
             }
             else
             {
@@ -142,10 +154,55 @@ class SnapSwiftParameterWidget: UIView
         }
     }
     
+    func updateWings()
+    {
+        if let parameter = parameter, stringValues = parameter.stringValues
+        {
+            if !leftStringValuesWing.isDescendantOfView(self)
+            {
+                addSubview(leftStringValuesWing)
+                addSubview(rightStringValuesWing)
+                
+                leftStringValuesWing.textColor  = UIColor.whiteColor()
+                leftStringValuesWing.textAlignment = NSTextAlignment.Right
+                
+                layoutSubviews()
+            }
+            
+            let selectedIndexInStringValues = Int(parameter.normalisedValue * Float(stringValues.count - 1))
+            
+            leftStringValuesWing.text = selectedIndexInStringValues > 0 ?
+                " | ".join(stringValues[0 ... selectedIndexInStringValues]) : ""
+            
+            // rightStringValuesWing.text = selectedIndexInStringValues < stringValues.count - 1 ? " | ".join(stringValues[selectedIndexInStringValues + 1 ... stringValues.count - 1]) : ""
+            
+            rightStringValues = selectedIndexInStringValues < stringValues.count - 1 ? Array(stringValues[selectedIndexInStringValues + 1 ... stringValues.count - 1]) : [String]()
+            
+            let rightCount = rightStringValuesWing.numberOfItemsInSection(0)
+            
+            if rightCount - rightStringValues.count == -1 // && rightCount != 0
+            {   
+                rightStringValuesWing.insertItemsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0)])
+            }
+            else if rightCount - rightStringValues.count == 1 && rightCount != 0
+            {
+                rightStringValuesWing.deleteItemsAtIndexPaths([NSIndexPath(forItem: 0, inSection: 0)])
+            }
+            else
+            {
+                rightStringValuesWing.reloadData()
+            }
+        }
+        else
+        {
+            removeStringValueWings()
+        }
+    }
+    
     func removeStringValueWings()
     {
-        leftStringValuesWing.removeFromSuperview()
-        rightStringValuesWing.removeFromSuperview()
+        // leftStringValuesWing.removeFromSuperview()
+        // rightStringValuesWing.removeFromSuperview()
     }
     
     override func layoutSubviews()
@@ -159,14 +216,44 @@ class SnapSwiftParameterWidget: UIView
         
         if leftStringValuesWing.isDescendantOfView(self)
         {
-            leftStringValuesWing.frame = CGRect(x: -300, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
-            rightStringValuesWing.frame = CGRect(x: frame.width, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
+            leftStringValuesWing.frame = CGRect(x: -300, y: 0, width: 300 - 10, height: CGFloat(snapSwiftRowHeight))
+            rightStringValuesWing.frame = CGRect(x: frame.width + 10, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
         }
     }
     
 
 }
 
+class StringValueCell: UICollectionViewCell
+{
+    var titleString:String = ""
+    {
+        didSet
+        {
+            label.text = titleString
+        }
+    }
+    
+    var label : UILabel = UILabel(frame: CGRectZero)
+    
+    override func didMoveToSuperview()
+    {
+        label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
+        label.numberOfLines = 0
+        label.textColor = UIColor.whiteColor()
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = NSTextAlignment.Center
+        
+        layer.backgroundColor = UIColor.lightGrayColor().CGColor
+        layer.borderColor = UIColor.darkGrayColor().CGColor
+        layer.cornerRadius = 4
+        layer.borderWidth = 1
+        contentView.addSubview(label)
+        
+        label.text = titleString
+    }
+    
+}
 
 
 /// An extended UIPanGestureRecognizer that fires UIGestureRecognizerState.Began

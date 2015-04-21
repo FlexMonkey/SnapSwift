@@ -79,7 +79,8 @@ class SnapSwiftContentViewController: UIViewController
             UIView.setAnimationBeginsFromCurrentState(true)
             UIView.animateWithDuration(0.3, animations: { self.background.frame.origin.y = snappedBackgroundOriginY })
             
-            let newValue = min(max(0, parameters[selectedWidgetIndex].normalisedValue - Float(deltaX / 250)), 1)
+            let valueDelta = Float(deltaX / 250) * Float(parameters[selectedWidgetIndex].stringValues == nil ? 1 : -1);
+            let newValue = min(max(0, parameters[selectedWidgetIndex].normalisedValue - valueDelta), 1)
             
             parameters[selectedWidgetIndex].normalisedValue = newValue
             
