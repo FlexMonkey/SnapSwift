@@ -29,13 +29,15 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     let imageView = UIImageView(frame: CGRectZero)
     let ciContext = CIContext(options: nil)
     
+    let presetColors = [PresetColors.Custom.rawValue,
+                        PresetColors.Red.rawValue, PresetColors.Green.rawValue, PresetColors.Blue.rawValue,
+                        PresetColors.Cyan.rawValue, PresetColors.Yellow.rawValue, PresetColors.Magenta.rawValue]
+    
     override func viewDidLoad()
     {
-        let presetColors = ["Red", "Green", "Blue", "Cyan", "Yellow", "Magenta", "Black"]
-        
         let cmykLabel: Float -> String = {(NSString(format: "%d", Int($0 * 100)) as String) + "%"}
         let rgbLabel: Float -> String = {(NSString(format: "%02X", Int($0 * 255)) as String)}
-        let presetLabel: Float -> String = { presetColors[Int($0 * Float(presetColors.count - 1))] }
+        let presetLabel: Float -> String = { self.presetColors[Int($0 * Float(self.presetColors.count - 1))] }
         
         snapSwiftParameters =
             [SnapSwiftParameter(label: "Red", normalisedValue: 0, labelFunction: rgbLabel),
@@ -45,7 +47,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
                 SnapSwiftParameter(label: "Magenta", normalisedValue: 0, labelFunction: cmykLabel),
                 SnapSwiftParameter(label: "Yellow", normalisedValue: 0, labelFunction: cmykLabel),
                 SnapSwiftParameter(label: "Black", normalisedValue: 0, labelFunction: cmykLabel),
-                SnapSwiftParameter(label: "Monochrome Intensity", normalisedValue: 0.5),
+                SnapSwiftParameter(label: "Monochrome Intensity", normalisedValue: 0.75),
                 SnapSwiftParameter(label: "Color Preset", normalisedValue: 0, labelFunction: presetLabel, stringValues: presetColors)]
         
         super.viewDidLoad()
@@ -66,7 +68,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     {
         snapSwiftParameters = parameters
         
-        if parameterIndex >= 0 && parameterIndex <= 2 // adjusting rgb...
+        if parameterIndex == -1 || (parameterIndex >= 0 && parameterIndex <= 2) // adjusting rgb...
         {
             let red = CGFloat(snapSwiftParameters[0].normalisedValue)
             let green = CGFloat(snapSwiftParameters[1].normalisedValue)
@@ -83,6 +85,11 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[4].normalisedValue = Float(magenta)
             snapSwiftParameters[5].normalisedValue = Float(yellow)
             snapSwiftParameters[6].normalisedValue = Float(black)
+            
+            if parameterIndex != -1
+            {
+                snapSwiftParameters[8].normalisedValue = 0
+            }
         }
         else if parameterIndex >= 3 && parameterIndex <= 6 // adjusting cmyk...  
         {
@@ -100,6 +107,14 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[0].normalisedValue = Float(red)
             snapSwiftParameters[1].normalisedValue = Float(green)
             snapSwiftParameters[2].normalisedValue = Float(blue)
+            
+            snapSwiftParameters[8].normalisedValue = 0
+        }
+        else if parameterIndex == 8 // changing preset color
+        {
+            let colorsIndex = Int(snapSwiftParameters[8].normalisedValue * Float(presetColors.count - 1))
+            
+            setRgbFromPresetColor(colorsIndex)
         }
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {self.applyImageFilter()})
@@ -107,6 +122,40 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
         snapSwift.parameters = snapSwiftParameters
     }
    
+    func setRgbFromPresetColor(index: Int)
+    {
+        if let presetColor = PresetColors(rawValue: presetColors[index])
+        {
+            let newRGB: (r: Float, g: Float, b: Float)
+            
+            switch presetColor
+            {
+            case .Custom:
+                newRGB = (snapSwiftParameters[0].normalisedValue, snapSwiftParameters[1].normalisedValue, snapSwiftParameters[2].normalisedValue)
+            case .Red:
+                newRGB = (1, 0, 0)
+            case .Green:
+                newRGB = (0, 1, 0)
+            case .Blue:
+                newRGB = (0, 0, 1)
+            case .Cyan:
+                newRGB = (0, 1, 1)
+            case .Magenta:
+                newRGB = (1, 0, 1)
+            case .Yellow:
+                newRGB = (1, 1, 0)
+            }
+            
+            snapSwiftParameters[0].normalisedValue = newRGB.r
+            snapSwiftParameters[1].normalisedValue = newRGB.g
+            snapSwiftParameters[2].normalisedValue = newRGB.b
+            
+            // this is a bit hacky: use -1 to prevent snapSwiftParameterDidChange() from resetting the 
+            // preset colors value...
+            snapSwiftParameterDidChange(parameterIndex: -1, parameters: snapSwiftParameters)
+        }
+    }
+    
     func applyImageFilter()
     {
         let monochromeFilter = CIFilter(name: "CIColorMonochrome")
@@ -136,3 +185,13 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     
 }
 
+enum PresetColors: String
+{
+    case Custom = "Custom"
+    case Red = "Red"
+    case Green = "Green"
+    case Blue = "Blue"
+    case Cyan = "Cyan"
+    case Magenta = "Magenta"
+    case Yellow = "Yellow"
+}
