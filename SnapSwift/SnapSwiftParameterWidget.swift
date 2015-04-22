@@ -176,7 +176,7 @@ class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollection
             let leftCount = leftStringValuesWing.numberOfItemsInSection(0)
             let leftIndexPath = NSIndexPath(forItem: 0, inSection: 0)
 
-            if leftCount - leftStringValues.count == -1 && leftCount != 0
+            if leftCount - leftStringValues.count == -1 
             {
                 leftStringValuesWing.insertItemsAtIndexPaths([ leftIndexPath ])
             }
