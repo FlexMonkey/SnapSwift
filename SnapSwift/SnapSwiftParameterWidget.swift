@@ -8,7 +8,7 @@
 
 
 /// A bordered box with label and float value display
-class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollectionViewDelegate
+class SnapSwiftParameterWidget: UIView
 {
     let unselectedBackgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.8)
     
@@ -18,8 +18,8 @@ class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollection
     
     let progressView = UIProgressView(progressViewStyle: UIProgressViewStyle.Default)
     
-    let leftStringValuesWing: UICollectionView
-    let rightStringValuesWing: UICollectionView
+    let leftStringValuesWing = SnapSwiftWing(side: .left)
+    let rightStringValuesWing = SnapSwiftWing(side: .right)
     
     var rightStringValues = [String]()
     var leftStringValues = [String]()
@@ -28,34 +28,7 @@ class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollection
     
     init()
     {
-        leftAlignedlayout.scrollDirection = .Horizontal
-        leftAlignedlayout.itemSize = CGSize(width: 100, height: snapSwiftRowHeight)
-        
-        rightStringValuesWing = UICollectionView(frame: CGRectZero, collectionViewLayout: leftAlignedlayout)
-        rightStringValuesWing.backgroundColor = UIColor.clearColor()
-        
-        rightStringValuesWing.registerClass(StringValueCell.self, forCellWithReuseIdentifier: "Cell")
-        
-        // ---
-        
-        let rightAlignedlayout = UICollectionViewRightAlignedLayout()
-        rightAlignedlayout.scrollDirection = .Horizontal
-        rightAlignedlayout.itemSize = CGSize(width: 100, height: snapSwiftRowHeight)
-        
-        leftStringValuesWing = UICollectionView(frame: CGRectZero, collectionViewLayout: rightAlignedlayout)
-        leftStringValuesWing.backgroundColor = UIColor.clearColor()
-        
-        leftStringValuesWing.registerClass(StringValueCell.self, forCellWithReuseIdentifier: "Cell")
-        
-        // ---
-        
         super.init(frame: CGRectZero)
-        
-        rightStringValuesWing.dataSource = self
-        rightStringValuesWing.delegate = self
-        
-        leftStringValuesWing.dataSource = self
-        leftStringValuesWing.delegate = self
     }
     
     required init(coder aDecoder: NSCoder)
@@ -85,21 +58,6 @@ class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollection
         selected = false
         
         updateWings()
-    }
-    
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
-    {
-        return collectionView == rightStringValuesWing ? rightStringValues.count : leftStringValues.count
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
-    {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! StringValueCell
-        
-        cell.titleString = collectionView == rightStringValuesWing ? rightStringValues[indexPath.item] : leftStringValues[indexPath.item]
-        
-        return cell
     }
     
     var selected: Bool = false
@@ -146,49 +104,16 @@ class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollection
                 addSubview(leftStringValuesWing)
                 addSubview(rightStringValuesWing)
                 
+                leftStringValuesWing.stringValues = stringValues
+                rightStringValuesWing.stringValues = stringValues
+                
                 layoutSubviews()
             }
             
             let selectedIndexInStringValues = Int(parameter.normalisedValue * Float(stringValues.count - 1))
-            
-            rightStringValues = selectedIndexInStringValues < stringValues.count - 1 ? Array(stringValues[selectedIndexInStringValues + 1 ... stringValues.count - 1]) : [String]()
-            
-            let rightCount = rightStringValuesWing.numberOfItemsInSection(0)
-            let rightIndexPath = NSIndexPath(forItem: 0, inSection: 0)
-            
-            if rightCount - rightStringValues.count == -1 
-            {
-                rightStringValuesWing.insertItemsAtIndexPaths([ rightIndexPath ])
-            }
-            else if rightCount - rightStringValues.count == 1 && rightCount != 0
-            {
-                rightStringValuesWing.deleteItemsAtIndexPaths([ rightIndexPath ])
-            }
-            else
-            {
-                rightStringValuesWing.reloadData()
-            }
-            
-            // ---
-            
-            leftStringValues = selectedIndexInStringValues > 0 ? Array(stringValues[0 ... selectedIndexInStringValues - 1]).reverse() : [String]()
-            
-            let leftCount = leftStringValuesWing.numberOfItemsInSection(0)
-            let leftIndexPath = NSIndexPath(forItem: 0, inSection: 0)
 
-            if leftCount - leftStringValues.count == -1 
-            {
-                leftStringValuesWing.insertItemsAtIndexPaths([ leftIndexPath ])
-            }
-            else if leftCount - leftStringValues.count == 1 && leftCount != 0
-            {
-                leftStringValuesWing.deleteItemsAtIndexPaths([ leftIndexPath ])
-            }
-            else
-            {
-                leftStringValuesWing.reloadData()
-            }
-
+            rightStringValuesWing.selectedIndex = selectedIndexInStringValues
+            leftStringValuesWing.selectedIndex = selectedIndexInStringValues
         }
         else
         {
@@ -217,7 +142,7 @@ class SnapSwiftParameterWidget: UIView, UICollectionViewDataSource, UICollection
             rightStringValuesWing.frame = CGRect(x: frame.width + 10, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
         }
     }
-    
-    
 }
+
+
 

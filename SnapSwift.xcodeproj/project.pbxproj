@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3E8F54291AE75C6000243276 /* UICollectionViewRightAlignedLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8F54281AE75C6000243276 /* UICollectionViewRightAlignedLayout.m */; };
 		3E8F542B1AE7731600243276 /* SnapSwiftParameterWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8F542A1AE7731600243276 /* SnapSwiftParameterWidget.swift */; };
 		3ED4D8061AE0DAF3008FA4D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D8051AE0DAF3008FA4D9 /* AppDelegate.swift */; };
 		3ED4D8081AE0DAF3008FA4D9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4D8071AE0DAF3008FA4D9 /* ViewController.swift */; };
@@ -32,8 +31,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3E8F54271AE75C6000243276 /* UICollectionViewRightAlignedLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICollectionViewRightAlignedLayout.h; sourceTree = "<group>"; };
-		3E8F54281AE75C6000243276 /* UICollectionViewRightAlignedLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewRightAlignedLayout.m; sourceTree = "<group>"; };
 		3E8F542A1AE7731600243276 /* SnapSwiftParameterWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapSwiftParameterWidget.swift; sourceTree = "<group>"; };
 		3ED4D8001AE0DAF3008FA4D9 /* SnapSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ED4D8041AE0DAF3008FA4D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,15 +67,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3E8F54261AE75C6000243276 /* UICollectionViewRightAlignedLayout */ = {
-			isa = PBXGroup;
-			children = (
-				3E8F54271AE75C6000243276 /* UICollectionViewRightAlignedLayout.h */,
-				3E8F54281AE75C6000243276 /* UICollectionViewRightAlignedLayout.m */,
-			);
-			path = UICollectionViewRightAlignedLayout;
-			sourceTree = "<group>";
-		};
 		3ED4D7F71AE0DAF3008FA4D9 = {
 			isa = PBXGroup;
 			children = (
@@ -100,7 +88,6 @@
 		3ED4D8021AE0DAF3008FA4D9 /* SnapSwift */ = {
 			isa = PBXGroup;
 			children = (
-				3E8F54261AE75C6000243276 /* UICollectionViewRightAlignedLayout */,
 				BE80EB691AE38C330028C414 /* assets */,
 				3ED4D8251AE0DAFC008FA4D9 /* snapSwift */,
 				3ED4D8051AE0DAF3008FA4D9 /* AppDelegate.swift */,
@@ -256,7 +243,6 @@
 				3ED4D8281AE0DB4E008FA4D9 /* SnapSwift.swift in Sources */,
 				BEB126131AE2384900F368E7 /* SnapSwiftSupportingClasses.swift in Sources */,
 				3ED4D8061AE0DAF3008FA4D9 /* AppDelegate.swift in Sources */,
-				3E8F54291AE75C6000243276 /* UICollectionViewRightAlignedLayout.m in Sources */,
 				BE80EB681AE370B20028C414 /* SnapSwiftContentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

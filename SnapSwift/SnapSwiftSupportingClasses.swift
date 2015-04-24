@@ -42,6 +42,112 @@ protocol SnapSwiftParameterChangedDelegate: NSObjectProtocol
     func snapSwiftParameterDidChange(#parameterIndex:Int, parameters: [SnapSwiftParameter])
 }
 
+
+/// A UIView to display a set of string values
+class SnapSwiftWing: UIView
+{
+    let side: SnapSwiftWingSide
+    
+    required init(side: SnapSwiftWingSide)
+    {
+        self.side = side
+        
+        super.init(frame: CGRectZero)
+    }
+
+    required init(coder aDecoder: NSCoder)
+    {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let itemsContainer = CALayer()
+    
+    var stringValues: [String] = [String]()
+    {
+        didSet
+        {
+            layer.addSublayer(itemsContainer)
+            
+            layer.masksToBounds = true
+            
+            layer.sublayers.map({($0 as? SnapSwiftWingItemRenderer)?.removeFromSuperlayer()})
+            
+            for (var index: Int, string: String) in enumerate(stringValues)
+            {
+                let itemRenderer = SnapSwiftWingItemRenderer(label: string)
+                itemRenderer.frame = CGRect(x: index * 100, y: 0, width: 95, height: snapSwiftRowHeight)
+                
+                itemsContainer.addSublayer(itemRenderer)
+            }
+            
+            itemsContainer.frame = CGRect(x: 0, y: 0, width: stringValues.count * 100, height: snapSwiftRowHeight)
+            selectedIndex = 0
+        }
+    }
+    
+    var selectedIndex: Int = 0
+    {
+        didSet
+        {
+            switch side
+            {
+            case .right:
+                itemsContainer.frame.origin.x = CGFloat(0 - (selectedIndex + 1) * 100)
+            case .left:
+                itemsContainer.frame.origin.x = layer.bounds.width - CGFloat(selectedIndex * 100)
+            }
+            
+        }
+    }
+    
+}
+
+/// Item renderer for SnapSwiftWing to display a string
+class SnapSwiftWingItemRenderer: CALayer
+{
+    let textLayer = CATextLayer()
+    
+    required init(label: String)
+    {
+        super.init()
+        
+        backgroundColor = UIColor.lightGrayColor().CGColor
+        
+        textLayer.alignmentMode = kCAAlignmentCenter
+        textLayer.fontSize = 18
+        textLayer.string = label
+        
+        addSublayer(textLayer)
+    }
+
+    required init(coder aDecoder: NSCoder)
+    {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSublayers()
+    {
+        super.layoutSublayers()
+        
+        textLayer.frame = CGRect(x: 0, y: bounds.height / 2 - 10, width: bounds.width, height: 20)
+    }
+    
+    var label:String?
+    {
+        didSet
+        {
+            textLayer.string = label
+        }
+    }
+}
+
+enum SnapSwiftWingSide
+{
+    case left
+    case right
+}
+
+/*
 class StringValueCell: UICollectionViewCell
 {
     var titleString:String = ""
@@ -70,8 +176,8 @@ class StringValueCell: UICollectionViewCell
         
         label.text = titleString
     }
-    
 }
+*/
 
 
 /// An extended UIPanGestureRecognizer that fires UIGestureRecognizerState.Began

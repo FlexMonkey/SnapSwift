@@ -8,4 +8,3 @@
 // Thanks to https://github.com/mokagio/UICollectionViewRightAlignedLayout
 
 #import <UIKit/UIGestureRecognizerSubclass.h>
-#import "UICollectionViewRightAlignedLayout.h"
