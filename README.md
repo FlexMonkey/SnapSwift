@@ -5,7 +5,7 @@ A combined popup menu / slider component for iOS in the style of Google's Snapse
 
 ![/SnapSwift/assets/SnapSwiftScreenRecording.gif](/SnapSwift/assets/SnapSwiftScreenRecording.gif)
 
-SnapSwift allows users to edit continuous or discrete parameters with a single touch anywhere on the screen. A vertical movement selects across a list of parameters and a horizontal movement changes the currently selected parameter's value.
+SnapSwift allows users to select and edit continuous or discrete parameters with a single touch anywhere on the screen. A vertical movement selects across a list of parameters and a horizontal movement changes the currently selected parameter's value.
 
 # Usage
 
