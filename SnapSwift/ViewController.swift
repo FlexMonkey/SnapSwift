@@ -31,7 +31,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
     
     let presetColors = [PresetColors.Custom.rawValue,
                         PresetColors.Red.rawValue, PresetColors.Green.rawValue, PresetColors.Blue.rawValue,
-                        PresetColors.Cyan.rawValue, PresetColors.Yellow.rawValue, PresetColors.Magenta.rawValue]
+                        PresetColors.Cyan.rawValue, PresetColors.Magenta.rawValue, PresetColors.Yellow.rawValue]
     
     override func viewDidLoad()
     {
@@ -77,9 +77,9 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             view.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
             
             let black = 1 - max(red, green, blue)
-            let cyan = (1 - red - black) / (1 - black)
-            let magenta = (1 - green - black) / (1 - black)
-            let yellow = (1 - blue - black) / (1 - black)
+            let cyan = black != 1 ? (1 - red - black) / (1 - black) : 0
+            let magenta = black != 1 ? (1 - green - black) / (1 - black) : 0
+            let yellow = black != 1 ? (1 - blue - black) / (1 - black) : 0
 
             snapSwiftParameters[3].normalisedValue = Float(cyan)
             snapSwiftParameters[4].normalisedValue = Float(magenta)
@@ -88,7 +88,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             
             if parameterIndex != -1
             {
-                snapSwiftParameters[8].normalisedValue = 0
+                snapSwiftParameters[8].selectedIndex = 0
             }
         }
         else if parameterIndex >= 3 && parameterIndex <= 6 // adjusting cmyk...  
@@ -98,9 +98,9 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             let yellow = CGFloat(snapSwiftParameters[5].normalisedValue)
             let black = CGFloat(snapSwiftParameters[6].normalisedValue)
             
-            let red = (1 - cyan) * (1 - black)
-            let green = (1 - magenta) * (1 - black)
-            let blue = (1 - yellow) * (1 - black)
+            let red = black != 1 ? (1 - cyan) * (1 - black) : 0
+            let green = black != 1 ? (1 - magenta) * (1 - black) : 0
+            let blue = black != 1 ? (1 - yellow) * (1 - black) : 0
             
             view.backgroundColor = UIColor(red: red, green: green, blue: blue, alpha: 1)
             
@@ -108,7 +108,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[1].normalisedValue = Float(green)
             snapSwiftParameters[2].normalisedValue = Float(blue)
             
-            snapSwiftParameters[8].normalisedValue = 0
+            snapSwiftParameters[8].selectedIndex = 0
         }
         else if parameterIndex == 8 // changing preset color
         {
@@ -117,11 +117,39 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             setRgbFromPresetColor(colorsIndex)
         }
         
+        setPresetFromColors()
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {self.applyImageFilter()})
         
         snapSwift.parameters = snapSwiftParameters
     }
    
+    func setPresetFromColors()
+    {
+        let rgb = (r: snapSwiftParameters[0].normalisedValue, g: snapSwiftParameters[1].normalisedValue, b: snapSwiftParameters[2].normalisedValue)
+        let presetColorIndex: Int
+        
+        switch rgb
+        {
+        case (1, 0, 0):
+            presetColorIndex = 1
+        case (0, 1, 0):
+            presetColorIndex = 2
+        case (0, 0, 1):
+            presetColorIndex = 3
+        case (0, 1, 1):
+            presetColorIndex = 4
+        case (1, 0, 1):
+            presetColorIndex = 5
+        case (1, 1, 0):
+            presetColorIndex = 6
+        default:
+            presetColorIndex = 0
+        }
+        
+        snapSwiftParameters[8].selectedIndex = presetColorIndex; println("presetColorIndex = \(presetColorIndex)")
+    }
+    
     func setRgbFromPresetColor(index: Int)
     {
         if let presetColor = PresetColors(rawValue: presetColors[index])

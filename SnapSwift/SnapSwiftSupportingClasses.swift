@@ -48,6 +48,19 @@ struct SnapSwiftParameter
                 return nil
             }
         }
+        set
+        {
+            if let stringValues = stringValues, selectedIndex = newValue
+            {
+                println("\(selectedIndex) ..... \((1 / Float(stringValues.count + 1)) * Float(selectedIndex))")
+                
+                normalisedValue = (1 / Float(stringValues.count - 1)) * Float(selectedIndex)
+            }
+            else
+            {
+                // ignore
+            }
+        }
     }
 }
 
