@@ -67,7 +67,11 @@ func snapSwiftParameterDidChange(#parameterIndex:Int, parameters: [SnapSwiftPara
 ...
 ```
 
-# Usage
+# Demo App
+
+The demo app uses a SnapSwift menu to enable the user to apply a ```CIColorMonochrome``` filter to an image. It demonstrates how parameters can be updated through code by setting either their ```normalisedValue``` or ```selectedIndex``` properties - the latter being ignored if a parameter's ```stringValues``` is ```nil```.
+
+# Installation
 
 To implement SnapSwift in your own project, you need the following four files:
 
