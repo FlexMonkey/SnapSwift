@@ -86,3 +86,6 @@ Furthermore, you need a bridging header with the following import:
 #import <UIKit/UIGestureRecognizerSubclass.h>
 ```
 
+# More Information
+
+To read about the development of SnapSwift, visit my blog: http://flexmonkey.blogspot.co.uk/search/label/SnapSwift
