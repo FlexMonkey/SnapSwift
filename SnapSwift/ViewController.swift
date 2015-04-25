@@ -89,6 +89,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             if parameterIndex != -1
             {
                 snapSwiftParameters[8].selectedIndex = 0
+                setPresetFromColors()
             }
         }
         else if parameterIndex >= 3 && parameterIndex <= 6 // adjusting cmyk...  
@@ -109,6 +110,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             snapSwiftParameters[2].normalisedValue = Float(blue)
             
             snapSwiftParameters[8].selectedIndex = 0
+            setPresetFromColors()
         }
         else if parameterIndex == 8 // changing preset color
         {
@@ -117,7 +119,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             setRgbFromPresetColor(colorsIndex)
         }
         
-        setPresetFromColors()
+        
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {self.applyImageFilter()})
         
@@ -147,7 +149,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             presetColorIndex = 0
         }
         
-        snapSwiftParameters[8].selectedIndex = presetColorIndex; println("presetColorIndex = \(presetColorIndex)")
+        snapSwiftParameters[8].selectedIndex = presetColorIndex
     }
     
     func setRgbFromPresetColor(index: Int)

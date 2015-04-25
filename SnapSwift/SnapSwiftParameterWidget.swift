@@ -140,8 +140,10 @@ class SnapSwiftParameterWidget: UIView
         
         if leftStringValuesWing.isDescendantOfView(self)
         {
-            leftStringValuesWing.frame = CGRect(x: -300, y: 0, width: 300 - 10, height: CGFloat(snapSwiftRowHeight))
-            rightStringValuesWing.frame = CGRect(x: frame.width + 10, y: 0, width: 300, height: CGFloat(snapSwiftRowHeight))
+            let wingWidth = CGFloat(600)
+            
+            leftStringValuesWing.frame = CGRect(x: -wingWidth, y: 0, width: wingWidth - 5, height: CGFloat(snapSwiftRowHeight))
+            rightStringValuesWing.frame = CGRect(x: frame.width + 5, y: 0, width: wingWidth, height: CGFloat(snapSwiftRowHeight))
         }
     }
 }
