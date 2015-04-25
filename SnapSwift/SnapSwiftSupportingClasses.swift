@@ -34,6 +34,21 @@ struct SnapSwiftParameter
         self.labelFunction = labelFunction
         self.stringValues = stringValues
     }
+    
+    var selectedIndex: Int?
+    {
+        get
+        {
+            if let stringValues = stringValues
+            {
+                return Int(normalisedValue * Float(stringValues.count - 1))
+            }
+            else
+            {
+                return nil
+            }
+        }
+    }
 }
 
 /// Protocol for responding to parameter changes 
@@ -46,6 +61,7 @@ protocol SnapSwiftParameterChangedDelegate: NSObjectProtocol
 /// A UIView to display a set of string values
 class SnapSwiftWing: UIView
 {
+    let itemRendererWidth = 100
     let side: SnapSwiftWingSide
     
     required init(side: SnapSwiftWingSide)
@@ -75,12 +91,12 @@ class SnapSwiftWing: UIView
             for (var index: Int, string: String) in enumerate(stringValues)
             {
                 let itemRenderer = SnapSwiftWingItemRenderer(label: string)
-                itemRenderer.frame = CGRect(x: index * 100, y: 0, width: 95, height: snapSwiftRowHeight)
+                itemRenderer.frame = CGRect(x: index * itemRendererWidth, y: 0, width: itemRendererWidth, height: snapSwiftRowHeight).rectByInsetting(dx: 2.5, dy: 5)
                 
                 itemsContainer.addSublayer(itemRenderer)
             }
             
-            itemsContainer.frame = CGRect(x: 0, y: 0, width: stringValues.count * 100, height: snapSwiftRowHeight)
+            itemsContainer.frame = CGRect(x: 0, y: 0, width: stringValues.count * itemRendererWidth, height: snapSwiftRowHeight)
             selectedIndex = 0
         }
     }
@@ -111,7 +127,10 @@ class SnapSwiftWingItemRenderer: CALayer
     {
         super.init()
         
-        backgroundColor = UIColor.lightGrayColor().CGColor
+        backgroundColor = UIColor(white: 0.667, alpha: 0.8).CGColor
+        borderColor = UIColor.darkGrayColor().CGColor
+        cornerRadius = 4
+        borderWidth = 1
         
         textLayer.alignmentMode = kCAAlignmentCenter
         textLayer.fontSize = 18
@@ -129,7 +148,7 @@ class SnapSwiftWingItemRenderer: CALayer
     {
         super.layoutSublayers()
         
-        textLayer.frame = CGRect(x: 0, y: bounds.height / 2 - 10, width: bounds.width, height: 20)
+        textLayer.frame = CGRect(x: 0, y: bounds.height / 2 - 10, width: bounds.width, height: 25)
     }
     
     var label:String?
@@ -146,39 +165,6 @@ enum SnapSwiftWingSide
     case left
     case right
 }
-
-/*
-class StringValueCell: UICollectionViewCell
-{
-    var titleString:String = ""
-    {
-        didSet
-        {
-            label.text = titleString
-        }
-    }
-    
-    var label : UILabel = UILabel(frame: CGRectZero)
-    
-    override func didMoveToSuperview()
-    {
-        label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
-        label.numberOfLines = 0
-        label.textColor = UIColor.whiteColor()
-        label.adjustsFontSizeToFitWidth = true
-        label.textAlignment = NSTextAlignment.Center
-        
-        layer.backgroundColor = UIColor(white: 0.667, alpha: 0.8).CGColor
-        layer.borderColor = UIColor.darkGrayColor().CGColor
-        layer.cornerRadius = 4
-        layer.borderWidth = 1
-        contentView.addSubview(label)
-        
-        label.text = titleString
-    }
-}
-*/
-
 
 /// An extended UIPanGestureRecognizer that fires UIGestureRecognizerState.Began
 /// with the first touch down, i.e. without requiring any movement.

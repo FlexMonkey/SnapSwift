@@ -82,6 +82,8 @@ class SnapSwiftParameterWidget: UIView
                 valueLabel.text = parameter.labelFunction(parameter.normalisedValue)
                 progressView.progress = parameter.normalisedValue
                 
+                progressView.alpha = parameter.stringValues == nil ? 1 : 0
+                
                 updateWings()
             }
             else
@@ -110,7 +112,7 @@ class SnapSwiftParameterWidget: UIView
                 layoutSubviews()
             }
             
-            let selectedIndexInStringValues = Int(parameter.normalisedValue * Float(stringValues.count - 1))
+            let selectedIndexInStringValues = parameter.selectedIndex!
 
             rightStringValuesWing.selectedIndex = selectedIndexInStringValues
             leftStringValuesWing.selectedIndex = selectedIndexInStringValues
@@ -132,7 +134,7 @@ class SnapSwiftParameterWidget: UIView
         titleLabel.frame = CGRect(x: 0, y: 0, width: frame.width / 2 + 10, height: frame.height).rectByInsetting(dx: 4, dy: 0)
         valueLabel.frame = CGRect(x: frame.width / 2, y: 0, width: frame.width / 2, height: frame.height).rectByInsetting(dx: 4, dy: 0)
         
-        progressView.frame = CGRect(x: 0, y: frame.height - 4, width: frame.width, height: 0).rectByInsetting(dx: 5, dy: 0)
+        progressView.frame = CGRect(x: 0, y: frame.height - 5, width: frame.width, height: 0).rectByInsetting(dx: 5, dy: 0)
         
         backgroundLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height).rectByInsetting(dx: 0, dy: 0.5)
         
