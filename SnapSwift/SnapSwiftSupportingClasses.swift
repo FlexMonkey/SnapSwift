@@ -65,7 +65,7 @@ struct SnapSwiftParameter
 /// Protocol for responding to parameter changes 
 protocol SnapSwiftParameterChangedDelegate: NSObjectProtocol
 {
-    func snapSwiftParameterDidChange(#parameterIndex:Int, parameters: [SnapSwiftParameter])
+    func snapSwiftParameterDidChange(parameterIndex parameterIndex:Int, parameters: [SnapSwiftParameter])
 }
 
 
@@ -82,7 +82,7 @@ class SnapSwiftWing: UIView
         super.init(frame: CGRectZero)
     }
 
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         fatalError("init(coder:) has not been implemented")
     }
@@ -97,12 +97,12 @@ class SnapSwiftWing: UIView
             
             layer.masksToBounds = true
             
-            layer.sublayers.map({($0 as? SnapSwiftWingItemRenderer)?.removeFromSuperlayer()})
+            layer.sublayers!.forEach({($0 as? SnapSwiftWingItemRenderer)?.removeFromSuperlayer()})
             
-            for (var index: Int, string: String) in enumerate(stringValues)
+            for (index, string) in stringValues.enumerate()
             {
                 let itemRenderer = SnapSwiftWingItemRenderer(label: string)
-                itemRenderer.frame = CGRect(x: index * itemRendererWidth, y: 0, width: itemRendererWidth, height: snapSwiftRowHeight).rectByInsetting(dx: 2.5, dy: 5)
+                itemRenderer.frame = CGRect(x: index * itemRendererWidth, y: 0, width: itemRendererWidth, height: snapSwiftRowHeight).insetBy(dx: 2.5, dy: 5)
                 
                 itemsContainer.addSublayer(itemRenderer)
             }
@@ -150,7 +150,7 @@ class SnapSwiftWingItemRenderer: CALayer
         addSublayer(textLayer)
     }
 
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         fatalError("init(coder:) has not been implemented")
     }
@@ -181,7 +181,7 @@ enum SnapSwiftWingSide
 /// with the first touch down, i.e. without requiring any movement.
 class SnapSwiftPanGestureRecognizer: UIPanGestureRecognizer
 {
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent!)
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent)
     {
         super.touchesBegan(touches, withEvent: event)
         

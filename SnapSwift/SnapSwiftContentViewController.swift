@@ -55,10 +55,10 @@ class SnapSwiftContentViewController: UIViewController
             x: view.frame.width / 2 - CGFloat(snapSwiftColumnWidth / 2),
             y: view.frame.height / 2  - CGFloat(snapSwiftRowHeight / 2),
             width: CGFloat(snapSwiftColumnWidth),
-            height: CGFloat(snapSwiftRowHeight)).rectByInsetting(dx: -5, dy: -1)
+            height: CGFloat(snapSwiftRowHeight)).insetBy(dx: -5, dy: -1)
     }
     
-    func handleMovement(#deltaX: CGFloat, deltaY: CGFloat)
+    func handleMovement(deltaX deltaX: CGFloat, deltaY: CGFloat)
     {
         if abs(deltaY) > 0 // vertical movement...
         {
@@ -92,8 +92,8 @@ class SnapSwiftContentViewController: UIViewController
     {
         didSet
         {
-            let oldParamNames = ":".join(oldValue.map{ $0.label })
-            let paramNames = ":".join(parameters.map{ $0.label })
+            let oldParamNames = oldValue.map{ $0.label }.joinWithSeparator(":")
+            let paramNames = parameters.map{ $0.label }.joinWithSeparator(":")
             
             if oldParamNames != paramNames
             {
@@ -103,7 +103,7 @@ class SnapSwiftContentViewController: UIViewController
             }
             else
             {
-                for (var i: Int, var widget) in enumerate(background.subviews)
+                for (i, widget) in background.subviews.enumerate()
                 {
                     (widget as? SnapSwiftParameterWidget)?.parameter = parameters[i]
                 }
@@ -115,10 +115,10 @@ class SnapSwiftContentViewController: UIViewController
     {
         for child in background.subviews
         {
-            (child as? UIView)?.removeFromSuperview()
+            (child as UIView).removeFromSuperview()
         }
         
-        for (var i: Int, var parameter) in enumerate(parameters)
+        for (i, parameter) in parameters.enumerate()
         {
             let widget = SnapSwiftParameterWidget()
             widget.parameter = parameter

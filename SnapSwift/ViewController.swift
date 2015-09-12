@@ -64,7 +64,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
         snapSwiftParameterDidChange(parameterIndex: 0, parameters: snapSwiftParameters)
     }
     
-    func snapSwiftParameterDidChange(#parameterIndex:Int, parameters: [SnapSwiftParameter])
+    func snapSwiftParameterDidChange(parameterIndex parameterIndex:Int, parameters: [SnapSwiftParameter])
     {
         snapSwiftParameters = parameters
         
@@ -193,15 +193,16 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
             green: CGFloat(snapSwiftParameters[1].normalisedValue),
             blue: CGFloat(snapSwiftParameters[2].normalisedValue),
             alpha: 1)
+        
         let monochromeInensity = CGFloat(snapSwiftParameters[7].normalisedValue)
         
-        monochromeFilter.setValue(CIImage(image: photograph), forKey: kCIInputImageKey)
-        monochromeFilter.setValue(monochromeColor, forKey: "inputColor")
-        monochromeFilter.setValue(monochromeInensity, forKey: "inputIntensity")
+        monochromeFilter!.setValue(CIImage(image: photograph!), forKey: kCIInputImageKey)
+        monochromeFilter!.setValue(monochromeColor, forKey: "inputColor")
+        monochromeFilter!.setValue(monochromeInensity, forKey: "inputIntensity")
         
-        let filteredImageData = monochromeFilter.valueForKey(kCIOutputImageKey) as! CIImage!
+        let filteredImageData = monochromeFilter!.valueForKey(kCIOutputImageKey) as! CIImage!
         
-        let filteredImageRef = ciContext.createCGImage(filteredImageData, fromRect: filteredImageData.extent())
+        let filteredImageRef = ciContext.createCGImage(filteredImageData, fromRect: filteredImageData.extent)
         
         let filteredImage = UIImage(CGImage: filteredImageRef)
         
@@ -210,7 +211,7 @@ class ViewController: UIViewController, SnapSwiftParameterChangedDelegate
 
     override func viewDidLayoutSubviews()
     {
-        imageView.frame = CGRect(x: view.frame.origin.x, y: view.frame.origin.y, width: view.frame.width, height: view.frame.height).rectByInsetting(dx: 50, dy: 50)
+        imageView.frame = CGRect(x: view.frame.origin.x, y: view.frame.origin.y, width: view.frame.width, height: view.frame.height).insetBy(dx: 50, dy: 50)
     }
     
 }
