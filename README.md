@@ -83,7 +83,7 @@ To implement SnapSwift in your own project, you need the following four files:
 Furthermore, you need a bridging header with the following import:
 
 ```
-#import <UIKit/UIGestureRecognizerSubclass.h>
+# import <UIKit/UIGestureRecognizerSubclass.h>
 ```
 
 # More Information
